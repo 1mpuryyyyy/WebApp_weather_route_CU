@@ -6,7 +6,7 @@ import re
 
 app = Flask(__name__)
 
-API_KEY = 'HiBxJFx73LldxxdrOyQKt0aR7NUuRWiL'
+API_KEY = 'NhT3aNM1cRJcnp7epQ7OqAGOhWxSgk4q'
 
 
 def get_location_key(city):
@@ -66,9 +66,18 @@ def get_forecast_data(location_key):
 
 
 def check_bad_weather(conditions):
-    if 0 <= conditions['temperature'] <= 35 and conditions['wind_speed'] <= 50 and conditions['probability_of_precipitation']:
-        good_result = 'Пора гулять!'
+    if 10 <= conditions['temperature'] <= 25:
+        good_result = 'Сейчас тепло и можно погулять'
         return good_result
+    elif conditions['temperature'] < 10:
+        good_result = 'Одевайтесь теплее'
+        return good_result
+    elif conditions['wind_speed'] >= 50:
+        bad_result = 'Там ураган'
+        return bad_result
+    elif conditions['temperature'] > 35:
+        bad_result = 'Ты расплавишься, сиди дома'
+        return bad_result
     else:
         bad_result = 'Пледик с чаем дома тоже вариант'
         return bad_result
@@ -81,7 +90,6 @@ def get_json(city, type):
         location_key = get_location_key(city)[0]
     elif type == 'coords':
         location_key, name = get_location_key_by_coords(city)
-
 
     if not location_key:
         return None
@@ -176,13 +184,12 @@ def main():
                             with open('data_point_to.json', 'w') as file:
                                 json.dump(coords_to_data, file)
         if error_message == '':
-            return render_template('weather.html', title='Прогнозирование маршрута', error_message=error_message, data=data)
+            return render_template('weather.html', title='Прогнозирование маршрута', error_message=error_message,
+                                   data=data)
         else:
             return render_template('weather.html', error_message=error_message)
     else:
         return render_template('index.html', title='Прогнозирование маршрута', error_message=error_message)
-
-
 
 
 if __name__ == '__main__':

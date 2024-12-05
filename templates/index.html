@@ -99,24 +99,6 @@
         form2.classList.toggle("active");
     });
 
-    function monitorNetworkStatus() {
-        const statusElement = document.getElementById('network-status');
-
-        function updateStatus() {
-            if (navigator.onLine) {
-                statusElement.style.display = 'none';
-            } else {
-                statusElement.style.display = 'block';
-            }
-        }
-
-        updateStatus();
-        window.addEventListener('online', updateStatus);
-        window.addEventListener('offline', updateStatus);
-    }
-
-    document.addEventListener('DOMContentLoaded', monitorNetworkStatus);
-
 
 </script>
 

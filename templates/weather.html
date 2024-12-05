@@ -7,7 +7,7 @@
     <link href="../static/static.css" rel="stylesheet">
 </head>
 <body>
-<a href="{{ url_for('main') }}" style="outline: none">
+<a href="{{ url_for('main') }}" style="text-decoration: none">
     <button type="button">Вернуться обратно</button>
 </a>
 <section class="weather" id="weather_page">
@@ -20,14 +20,12 @@
                 <div class="card-info">
                     <div class="card">
                         <ul>
-                            <li style="display: flex; justify-content: space-between"><h4>
-                                {{ town }}</h4> <img
-                                    src="https://cdn-icons-png.flaticon.com/512/2893/2893120.png" alt="weather"/></li>
+                            <h3>{{ town }}</h3>
                             <li>Температура: {{ data[town]['temperature'] }}°C</li>
                             <li> Скорость ветра: {{ data[town]['wind_speed'] }}м/c</li>
                             <li> Вероятность осадков: {{ data[town]['probability_of_precipitation'] }}%</li>
                             <li> Влажность: {{ data[town]['humidity'] }}%</li>
-                            <p style="font-size: 18px">{{ data[town]['weather_status'] }}</p>
+                            <p id="description" style="font-size: 18px">{{ data[town]['weather_status'] }}</p>
                         </ul>
                     </div>
                 </div>
@@ -37,4 +35,25 @@
     {% endif %}
 </section>
 </body>
+<script>
+    {#let img_url = document.getElementById('img')#}
+    {#let description1 = document.getElementById('description').textContent;#}
+    {#switch (description1) {#}
+    {#    case "Сейчас тепло и можно погулять":#}
+    {#        img_url.src = 'https://cdn-icons-png.flaticon.com/512/1585/1585341.png';#}
+    {#        break;#}
+    {#    case "Одевайтесь теплее":#}
+    {#        img_url.src = 'https://cdn-icons-png.flaticon.com/512/2465/2465979.png'#}
+    {#        break;#}
+    {#    case "Ты расплавишься, сиди дома":#}
+    {#        img_url.src = 'https://cdn-icons-png.flaticon.com/512/2893/2893120.png'#}
+    {#        break;#}
+    {#    case "Там ураган":#}
+    {#        img_url.src = 'https://cdn-icons-png.flaticon.com/512/182/182264.png';#}
+    {#        break;#}
+    {#    default:#}
+    {# } #}
+
+
+</script>
 </html>
