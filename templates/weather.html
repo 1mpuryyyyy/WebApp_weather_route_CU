@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="../static/static.css" rel="stylesheet">
+</head>
+<body>
+<a href="{{ url_for('main') }}" style="outline: none">
+    <button type="button">Вернуться обратно</button>
+</a>
+<section class="weather" id="weather_page">
+    {% if error_message %}
+        <h4> {{ error_message }}</h4>
+    {% endif %}
+    {% if data %}
+        <div style="display: flex; justify-content: space-around">
+            {% for town in data.keys() %}
+                <div class="card-info">
+                    <div class="card">
+                        <ul>
+                            <li style="display: flex; justify-content: space-between"><h4>
+                                {{ town }}</h4> <img
+                                    src="https://cdn-icons-png.flaticon.com/512/2893/2893120.png" alt="weather"/></li>
+                            <li>Температура: {{ data[town]['temperature'] }}°C</li>
+                            <li> Скорость ветра: {{ data[town]['wind_speed'] }}м/c</li>
+                            <li> Вероятность осадков: {{ data[town]['probability_of_precipitation'] }}%</li>
+                            <li> Влажность: {{ data[town]['humidity'] }}%</li>
+                            <p style="font-size: 18px">{{ data[town]['weather_status'] }}</p>
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    {% endif %}
+</section>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="../static/static.css" rel="stylesheet">
+</head>
+<body>
+<section class="points" id="points_page">
+    <pre class="caption-text" id="animatedGreeting"></pre>
+    <br/>
+    <div id="points">
+        <div class="toggle-container">
+            <div class="toggle-button" id="toggleButton">
+                <div class="toggle-circle"></div>
+                <p style="padding: 0 3px 0 3px">Город</p>
+            </div>
+        </div>
+        <div class="post_form active" id="by_town">
+            <form method="POST">
+                <div class="form">
+                    <input name="type" value="name" type="hidden">
+                    <div>
+                        <input type="text" id="point_from" name="point_from" placeholder="Откуда" required>
+                        <label for="point_from">Название точки отправления</label>
+                    </div>
+                    <div>
+                        <input type="text" id="point_to" name='point_to' placeholder="Куда" required>
+                        <label for="point_to">Название конечной точки </label>
+                    </div>
+                </div>
+                <button class="submit" type="submit">Посчитать</button>
+            </form>
+        </div>
+        <div class="post_form" id="by_coords">
+            <form method="POST">
+                <div class="form">
+                    <input name="type" value="coords" type="hidden">
+                    <div>
+                        <input type="text" id="coords_from" name="coords_from" placeholder="Широта, долгота" required>
+                        <label for="point_from">Координаты точки отправления</label>
+                    </div>
+                    <div>
+                        <input type="text" id="coords_to" name='coords_to' placeholder="Широта, долгота" required>
+                        <label for="point_to">Координаты конечной точки </label>
+                    </div>
+                </div>
+                <button class="submit" type="submit">Посчитать</button>
+            </form>
+        </div>
+    </div>
+</section>
+<div id="error" style="width: 100%; text-align: center">
+     {% if error_message %}
+        <h4>{{ error_message }}</h4>
+    {% endif %}
+</div>
+</body>
+<script>
+    const animatedGreeting = document.getElementById('animatedGreeting');
+    const textToGreeting = "Добро пожаловать в сервис планирования маршрутов! \n \nВыберите тип ввода, чтобы узнать погоду:";
+
+    function animateText(text, element, speed = 50) {
+        element.textContent = '';
+        let index = 0;
+        const interval = setInterval(() => {
+            element.textContent += text[index];
+            index++;
+            if (index >= text.length) {
+                clearInterval(interval);
+                document.getElementById('points').classList.add('active');
+            }
+        }, speed);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        animateText(textToGreeting, animatedGreeting, 35);
+    });
+
+
+    const form1 = document.getElementById("by_town");
+    const form2 = document.getElementById("by_coords");
+    const toggleButton = document.getElementById("toggleButton");
+    let isCity = true;
+    toggleButton.addEventListener("click", () => {
+        isCity = !isCity;
+        toggleButton.classList.toggle("active");
+        toggleButton.style.width = isCity ? '160px' : '160px';
+        toggleButton.style.justifyContent = isCity ? 'center' : 'left';
+        const textElement = toggleButton.querySelector('p');
+        textElement.classList.add('hidden');
+
+        setTimeout(() => {
+            textElement.textContent = isCity ? 'Город' : 'Координаты';
+            textElement.classList.remove('hidden');
+        }, 300);
+        form1.classList.toggle("active");
+        form2.classList.toggle("active");
+    });
+
+    function monitorNetworkStatus() {
+        const statusElement = document.getElementById('network-status');
+
+        function updateStatus() {
+            if (navigator.onLine) {
+                statusElement.style.display = 'none';
+            } else {
+                statusElement.style.display = 'block';
+            }
+        }
+
+        updateStatus();
+        window.addEventListener('online', updateStatus);
+        window.addEventListener('offline', updateStatus);
+    }
+
+    document.addEventListener('DOMContentLoaded', monitorNetworkStatus);
+
+
+</script>
+
+</html>
