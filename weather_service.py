@@ -2,7 +2,7 @@ import requests
 import os
 
 # API_KEY = os.getenv('API')
-API_KEY = "NhT3aNM1cRJcnp7epQ7OqAGOhWxSgk4q"
+API_KEY = "ZCNtRKg0eFKVsNOjU9AyGGr3o83hZyBp"
 
 
 def get_location_key(location):
