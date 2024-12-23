@@ -2,7 +2,8 @@ import requests
 import os
 
 # API_KEY = os.getenv('API')
-API_KEY = "AQasPW6U65ELqkEkfYGmNjzAspc6qyIR"
+API_KEY = "NhT3aNM1cRJcnp7epQ7OqAGOhWxSgk4q"
+
 
 def get_location_key(location):
     url = f'http://dataservice.accuweather.com/locations/v1/cities/search?apikey={API_KEY}&q={location}&language=ru-ru'
@@ -14,8 +15,11 @@ def get_location_key(location):
             return None
         return data[0]['Key']
     except requests.RequestException as e:
+        if response.status_code == 401 or response.status_code == 503:
+            return '401'
         print(f"Ошибка при получении ключа локации для '{location}': {e}")
         return None
+
 
 def get_weather_data(location_key):
     url = f'http://dataservice.accuweather.com/forecasts/v1/daily/5day/{location_key}?apikey={API_KEY}&language=ru-ru&details=true&metric=true'
@@ -26,6 +30,7 @@ def get_weather_data(location_key):
     except requests.RequestException as e:
         print(f"Ошибка при получении данных о погоде для ключа '{location_key}': {e}")
         return None
+
 
 def get_weather_info(weather_data):
     daily_forecasts = weather_data['DailyForecasts']
@@ -44,6 +49,7 @@ def get_weather_info(weather_data):
             'precipitation_probability': precipitation_probability
         })
     return weather_info
+
 
 def get_coordinates(location):
     location_key = get_location_key(location)

@@ -55,6 +55,8 @@ def index():
             location_key = get_location_key(location)
             if location_key is None:
                 return render_template('weather.html', error=f"Ошибка: локация '{original_location}' не найдена.")
+            if location_key == '401':
+                return render_template('weather.html', error=f'Произошла ошибка с токеном')
 
             weather_data = get_weather_data(location_key)
             if weather_data is None:
@@ -103,8 +105,6 @@ def index():
             map_json = pio.to_json(fig_map)
         else:
             map_json = None
-        print(graphs)
-        print(map_json)
         return render_template('weather.html', graphs=graphs, map_json=map_json)
 
     return render_template('index.html')
