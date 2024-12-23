@@ -103,7 +103,8 @@ def index():
             map_json = pio.to_json(fig_map)
         else:
             map_json = None
-
+        print(graphs)
+        print(map_json)
         return render_template('weather.html', graphs=graphs, map_json=map_json)
 
     return render_template('index.html')
