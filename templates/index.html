@@ -18,17 +18,26 @@
             </div>
         </div>
         <div class="post_form active" id="by_town">
-            <form method="POST">
-                <div class="form">
-                    <input name="type" value="name" type="hidden">
+            <form method="POST" onsubmit="sendData()">
+                <div class="form" id="by_town_div">
+                    <input name="locations" value="" id='values_town' type="hidden">
                     <div>
                         <input type="text" id="point_from" name="point_from" placeholder="Откуда" required>
                         <label for="point_from">Название точки отправления</label>
+                    </div>
+                    <div id="new_point">
+                        <button onclick="add_point_city()" class="submit" style="margin-bottom: 15px">+</button>
+                        <br/>
                     </div>
                     <div>
                         <input type="text" id="point_to" name='point_to' placeholder="Куда" required>
                         <label for="point_to">Название конечной точки </label>
                     </div>
+                </div>
+                <div class="container">
+                    <p>Выберите количество дней для прогноза погоды</p>
+                    <input name="days" type="range" id="slider" min="1" max="5" value="3" step="1">
+                    <p>Вы выбрали: <span id="value">3</span></p>
                 </div>
                 <button class="submit" type="submit">Посчитать</button>
             </form>
@@ -52,12 +61,13 @@
     </div>
 </section>
 <div id="error" style="width: 100%; text-align: center">
-     {% if error_message %}
+    {% if error_message %}
         <h4>{{ error_message }}</h4>
     {% endif %}
 </div>
 </body>
 <script>
+    let point_counter = 0
     const animatedGreeting = document.getElementById('animatedGreeting');
     const textToGreeting = "Добро пожаловать в сервис планирования маршрутов! \n \nВыберите тип ввода, чтобы узнать погоду:";
 
@@ -97,6 +107,44 @@
         }, 300);
         form1.classList.toggle("active");
         form2.classList.toggle("active");
+    });
+
+    function add_point_city() {
+        point_counter++
+        let parent = document.getElementById('by_town_div');
+        const new_input = document.createElement('div');
+        const new_button = document.getElementById('new_point')
+        new_input.innerHTML = `
+            <input type="text" id="point_middle_${point_counter}" name='intermediate_points' required>
+                <label for="point_middle_${point_counter}">Название промежуточной точки </label>
+        `;
+
+        parent.insertBefore(new_input, new_button);
+    }
+
+    function sendData() {
+        let data = document.getElementById('values_town')
+        const startPoint = document.getElementById('point_from').value.trim();
+        const endPoint = document.getElementById('point_to').value.trim();
+        const intermediatePoints = document.querySelectorAll('[name="intermediate_points"]');
+        const locations = [startPoint];
+        intermediatePoints.forEach(point => {
+            if (point.value.trim()) {
+                locations.push(point.value.trim());
+            }
+        });
+        locations.push(endPoint)
+
+        data.value = locations.join('\n');
+        console.log(locations)
+
+    }
+
+    const slider = document.getElementById('slider');
+    const valueDisplay = document.getElementById('value');
+
+    slider.addEventListener('input', function () {
+        valueDisplay.textContent = slider.value;
     });
 
 

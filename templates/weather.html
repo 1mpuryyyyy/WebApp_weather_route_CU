@@ -6,54 +6,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="../static/static.css" rel="stylesheet">
 </head>
+<style>
+    .city-block {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: 60px;
+    }
+
+    .city-block:first-child {
+        margin-top: 40px;
+    }
+
+    .city-block h2 {
+        margin-bottom: 15px;
+        color: #007bff;
+    }
+
+    .graph-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .graph-container div {
+        flex: 1;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+        max-height: 500px;
+    }
+
+    #route-map {
+        width: 100%;
+        height: 500px;
+        margin-top: 20px;
+        border-radius: 10px;
+    }
+
+    .map-container {
+        margin-top: 40px;
+    }
+</style>
 <body>
-<a href="{{ url_for('main') }}" style="text-decoration: none">
+<a href="{{ url_for('index') }}" style="text-decoration: none">
     <button type="button">Вернуться обратно</button>
 </a>
 <section class="weather" id="weather_page">
-    {% if error_message %}
-        <h4> {{ error_message }}</h4>
-    {% endif %}
-    {% if data %}
-        <div style="display: flex; justify-content: space-around">
-            {% for town in data.keys() %}
-                <div class="card-info">
-                    <div class="card">
-                        <ul>
-                            <h3>{{ town }}</h3>
-                            <li>Температура: {{ data[town]['temperature'] }}°C</li>
-                            <li> Скорость ветра: {{ data[town]['wind_speed'] }}м/c</li>
-                            <li> Вероятность осадков: {{ data[town]['probability_of_precipitation'] }}%</li>
-                            <li> Влажность: {{ data[town]['humidity'] }}%</li>
-                            <p id="description" style="font-size: 18px">{{ data[town]['weather_status'] }}</p>
-                        </ul>
+    {% if error %}
+        <h4> {{ error }}</h4>
+    {% else %}
+        <div class="city-blocks">
+            {% for graph in graphs %}
+                <div class="city-block">
+                    <h2>{{ graph.location }}</h2>
+                    <div class="graph-container">
+                        <div id="{{ graph.location }}-temp"></div>
+                        <script>
+                            Plotly.react('{{ graph.location }}-temp', {{ graph.temp_graph | safe }});
+                        </script>
+                        <div id="{{ graph.location }}-precip"></div>
+                        <script>
+                            Plotly.react('{{ graph.location }}-precip', {{ graph.precip_graph | safe }});
+                        </script>
+                        <div id="{{ graph.location }}-wind"></div>
+                        <script>
+                            Plotly.react('{{ graph.location }}-wind', {{ graph.wind_graph | safe }});
+                        </script>
                     </div>
                 </div>
             {% endfor %}
         </div>
-
+        <div class="map-container">
+            <h2>Маршрут на карте:</h2>
+            <div id="route-map"></div>
+            <script>
+                Plotly.react('route-map', {{ map_json | safe }});
+            </script>
+        </div>
     {% endif %}
 </section>
 </body>
-<script>
-    {#let img_url = document.getElementById('img')#}
-    {#let description1 = document.getElementById('description').textContent;#}
-    {#switch (description1) {#}
-    {#    case "Сейчас тепло и можно погулять":#}
-    {#        img_url.src = 'https://cdn-icons-png.flaticon.com/512/1585/1585341.png';#}
-    {#        break;#}
-    {#    case "Одевайтесь теплее":#}
-    {#        img_url.src = 'https://cdn-icons-png.flaticon.com/512/2465/2465979.png'#}
-    {#        break;#}
-    {#    case "Ты расплавишься, сиди дома":#}
-    {#        img_url.src = 'https://cdn-icons-png.flaticon.com/512/2893/2893120.png'#}
-    {#        break;#}
-    {#    case "Там ураган":#}
-    {#        img_url.src = 'https://cdn-icons-png.flaticon.com/512/182/182264.png';#}
-    {#        break;#}
-    {#    default:#}
-    {# } #}
-
-
-</script>
 </html>

@@ -152,6 +152,7 @@ form {
 .form {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .form div {
@@ -231,5 +232,11 @@ pre {
     color: #ffffff;
 }
 
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
 
